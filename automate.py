@@ -1,5 +1,18 @@
 import copy as cp
 
+# Question 1
+import string
+
+TOKENS = {
+    "PAR_O": 101,      # Parenthèse ouvrante '('
+    "PAR_F": 102,      # Parenthèse fermante ')'
+    "PLUS": 103,       # Opérateur '+'
+    "DOT": 104,        # Opérateur '.'
+    "STAR": 105,       # Opérateur '*'
+    "EPSILON": 106,    # Epsilon 'E'
+    "EMPTY_SET": 107,  # Ensemble vide 'O'
+    "LETTER": 108      # Lettres minuscules de 'a' à 'z'
+}
 
 class automate:
     """
