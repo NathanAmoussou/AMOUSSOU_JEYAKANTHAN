@@ -1,0 +1,252 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> expression
+Rule 1     expression -> expression PLUS term
+Rule 2     expression -> term
+Rule 3     term -> term DOT factor
+Rule 4     term -> factor
+Rule 5     factor -> factor STAR
+Rule 6     factor -> primary
+Rule 7     primary -> LETTER
+Rule 8     primary -> EPSILON
+Rule 9     primary -> EMPTY_SET
+Rule 10    primary -> PAR_O expression PAR_F
+
+Terminals, with rules where they appear
+
+DOT                  : 3
+EMPTY_SET            : 9
+EPSILON              : 8
+LETTER               : 7
+PAR_F                : 10
+PAR_O                : 10
+PLUS                 : 1
+STAR                 : 5
+error                : 
+
+Nonterminals, with rules where they appear
+
+expression           : 1 10 0
+factor               : 3 4 5
+primary              : 6
+term                 : 1 2 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . expression PLUS term
+    (2) expression -> . term
+    (3) term -> . term DOT factor
+    (4) term -> . factor
+    (5) factor -> . factor STAR
+    (6) factor -> . primary
+    (7) primary -> . LETTER
+    (8) primary -> . EPSILON
+    (9) primary -> . EMPTY_SET
+    (10) primary -> . PAR_O expression PAR_F
+
+    LETTER          shift and go to state 5
+    EPSILON         shift and go to state 6
+    EMPTY_SET       shift and go to state 7
+    PAR_O           shift and go to state 8
+
+    expression                     shift and go to state 1
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+    primary                        shift and go to state 4
+
+state 1
+
+    (0) S' -> expression .
+    (1) expression -> expression . PLUS term
+
+    PLUS            shift and go to state 9
+
+
+state 2
+
+    (2) expression -> term .
+    (3) term -> term . DOT factor
+
+    PLUS            reduce using rule 2 (expression -> term .)
+    $end            reduce using rule 2 (expression -> term .)
+    PAR_F           reduce using rule 2 (expression -> term .)
+    DOT             shift and go to state 10
+
+
+state 3
+
+    (4) term -> factor .
+    (5) factor -> factor . STAR
+
+    DOT             reduce using rule 4 (term -> factor .)
+    PLUS            reduce using rule 4 (term -> factor .)
+    $end            reduce using rule 4 (term -> factor .)
+    PAR_F           reduce using rule 4 (term -> factor .)
+    STAR            shift and go to state 11
+
+
+state 4
+
+    (6) factor -> primary .
+
+    STAR            reduce using rule 6 (factor -> primary .)
+    DOT             reduce using rule 6 (factor -> primary .)
+    PLUS            reduce using rule 6 (factor -> primary .)
+    $end            reduce using rule 6 (factor -> primary .)
+    PAR_F           reduce using rule 6 (factor -> primary .)
+
+
+state 5
+
+    (7) primary -> LETTER .
+
+    STAR            reduce using rule 7 (primary -> LETTER .)
+    DOT             reduce using rule 7 (primary -> LETTER .)
+    PLUS            reduce using rule 7 (primary -> LETTER .)
+    $end            reduce using rule 7 (primary -> LETTER .)
+    PAR_F           reduce using rule 7 (primary -> LETTER .)
+
+
+state 6
+
+    (8) primary -> EPSILON .
+
+    STAR            reduce using rule 8 (primary -> EPSILON .)
+    DOT             reduce using rule 8 (primary -> EPSILON .)
+    PLUS            reduce using rule 8 (primary -> EPSILON .)
+    $end            reduce using rule 8 (primary -> EPSILON .)
+    PAR_F           reduce using rule 8 (primary -> EPSILON .)
+
+
+state 7
+
+    (9) primary -> EMPTY_SET .
+
+    STAR            reduce using rule 9 (primary -> EMPTY_SET .)
+    DOT             reduce using rule 9 (primary -> EMPTY_SET .)
+    PLUS            reduce using rule 9 (primary -> EMPTY_SET .)
+    $end            reduce using rule 9 (primary -> EMPTY_SET .)
+    PAR_F           reduce using rule 9 (primary -> EMPTY_SET .)
+
+
+state 8
+
+    (10) primary -> PAR_O . expression PAR_F
+    (1) expression -> . expression PLUS term
+    (2) expression -> . term
+    (3) term -> . term DOT factor
+    (4) term -> . factor
+    (5) factor -> . factor STAR
+    (6) factor -> . primary
+    (7) primary -> . LETTER
+    (8) primary -> . EPSILON
+    (9) primary -> . EMPTY_SET
+    (10) primary -> . PAR_O expression PAR_F
+
+    LETTER          shift and go to state 5
+    EPSILON         shift and go to state 6
+    EMPTY_SET       shift and go to state 7
+    PAR_O           shift and go to state 8
+
+    expression                     shift and go to state 12
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+    primary                        shift and go to state 4
+
+state 9
+
+    (1) expression -> expression PLUS . term
+    (3) term -> . term DOT factor
+    (4) term -> . factor
+    (5) factor -> . factor STAR
+    (6) factor -> . primary
+    (7) primary -> . LETTER
+    (8) primary -> . EPSILON
+    (9) primary -> . EMPTY_SET
+    (10) primary -> . PAR_O expression PAR_F
+
+    LETTER          shift and go to state 5
+    EPSILON         shift and go to state 6
+    EMPTY_SET       shift and go to state 7
+    PAR_O           shift and go to state 8
+
+    term                           shift and go to state 13
+    factor                         shift and go to state 3
+    primary                        shift and go to state 4
+
+state 10
+
+    (3) term -> term DOT . factor
+    (5) factor -> . factor STAR
+    (6) factor -> . primary
+    (7) primary -> . LETTER
+    (8) primary -> . EPSILON
+    (9) primary -> . EMPTY_SET
+    (10) primary -> . PAR_O expression PAR_F
+
+    LETTER          shift and go to state 5
+    EPSILON         shift and go to state 6
+    EMPTY_SET       shift and go to state 7
+    PAR_O           shift and go to state 8
+
+    factor                         shift and go to state 14
+    primary                        shift and go to state 4
+
+state 11
+
+    (5) factor -> factor STAR .
+
+    STAR            reduce using rule 5 (factor -> factor STAR .)
+    DOT             reduce using rule 5 (factor -> factor STAR .)
+    PLUS            reduce using rule 5 (factor -> factor STAR .)
+    $end            reduce using rule 5 (factor -> factor STAR .)
+    PAR_F           reduce using rule 5 (factor -> factor STAR .)
+
+
+state 12
+
+    (10) primary -> PAR_O expression . PAR_F
+    (1) expression -> expression . PLUS term
+
+    PAR_F           shift and go to state 15
+    PLUS            shift and go to state 9
+
+
+state 13
+
+    (1) expression -> expression PLUS term .
+    (3) term -> term . DOT factor
+
+    PLUS            reduce using rule 1 (expression -> expression PLUS term .)
+    $end            reduce using rule 1 (expression -> expression PLUS term .)
+    PAR_F           reduce using rule 1 (expression -> expression PLUS term .)
+    DOT             shift and go to state 10
+
+
+state 14
+
+    (3) term -> term DOT factor .
+    (5) factor -> factor . STAR
+
+    DOT             reduce using rule 3 (term -> term DOT factor .)
+    PLUS            reduce using rule 3 (term -> term DOT factor .)
+    $end            reduce using rule 3 (term -> term DOT factor .)
+    PAR_F           reduce using rule 3 (term -> term DOT factor .)
+    STAR            shift and go to state 11
+
+
+state 15
+
+    (10) primary -> PAR_O expression PAR_F .
+
+    STAR            reduce using rule 10 (primary -> PAR_O expression PAR_F .)
+    DOT             reduce using rule 10 (primary -> PAR_O expression PAR_F .)
+    PLUS            reduce using rule 10 (primary -> PAR_O expression PAR_F .)
+    $end            reduce using rule 10 (primary -> PAR_O expression PAR_F .)
+    PAR_F           reduce using rule 10 (primary -> PAR_O expression PAR_F .)
+
