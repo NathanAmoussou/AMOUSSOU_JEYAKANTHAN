@@ -1,0 +1,41 @@
+Question 3
+
+regexp_lex.py avec (a+b)*.E retourne :
+LexToken(PAR_O,'(',2,1)
+LexToken(LETTER,'a',2,2)
+LexToken(PLUS,'+',2,3)
+LexToken(LETTER,'b',2,4)
+LexToken(PAR_F,')',2,5)
+LexToken(STAR,'*',2,6)
+LexToken(DOT,'.',2,7)
+LexToken(EPSILON,'E',2,8)
+
+regexp_lex.py avec (a+b)*.E\na(a+b)*.E retourne :
+LexToken(PAR_O,'(',2,1)
+LexToken(LETTER,'a',2,2)
+LexToken(PLUS,'+',2,3)
+LexToken(LETTER,'b',2,4)
+LexToken(PAR_F,')',2,5)
+LexToken(STAR,'*',2,6)
+LexToken(DOT,'.',2,7)
+LexToken(EPSILON,'E',2,8)
+LexToken(LETTER,'a',3,10)
+LexToken(PAR_O,'(',3,11)
+LexToken(LETTER,'a',3,12)
+LexToken(PLUS,'+',3,13)
+LexToken(LETTER,'b',3,14)
+LexToken(PAR_F,')',3,15)
+LexToken(STAR,'*',3,16)
+LexToken(DOT,'.',3,17)
+LexToken(EPSILON,'E',3,18)
+
+regexp_lex.py avec (a+b)*.E$ retourne :
+LexToken(PAR_O,'(',2,1)
+LexToken(LETTER,'a',2,2)
+LexToken(PLUS,'+',2,3)
+LexToken(LETTER,'b',2,4)
+LexToken(PAR_F,')',2,5)
+LexToken(STAR,'*',2,6)
+LexToken(DOT,'.',2,7)
+LexToken(EPSILON,'E',2,8)
+Caractère illégal '$'

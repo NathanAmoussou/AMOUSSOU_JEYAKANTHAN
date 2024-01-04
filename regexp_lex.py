@@ -47,7 +47,7 @@ lexer = lex.lex()
 
 # Testons l'analyseur lexical
 data = '''
-(a+b)*.E
+(a+b)*.E$
 '''
 
 # Donner à l'analyseur lexical une entrée
