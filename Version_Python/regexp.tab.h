@@ -39,31 +39,42 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     PAR_O = 258,
-     PAR_F = 259,
-     PLUS = 260,
-     DOT = 261,
-     STAR = 262,
-     EPSILON = 263,
-     EMPTY_SET = 264,
-     LETTER = 265
+     WORD = 258,
+     PAR_O = 259,
+     PAR_F = 260,
+     PLUS = 261,
+     DOT = 262,
+     STAR = 263,
+     EPSILON = 264,
+     EMPTY_SET = 265,
+     LETTER = 266,
+     NEWLINE = 267
    };
 #endif
 /* Tokens.  */
-#define PAR_O 258
-#define PAR_F 259
-#define PLUS 260
-#define DOT 261
-#define STAR 262
-#define EPSILON 263
-#define EMPTY_SET 264
-#define LETTER 265
+#define WORD 258
+#define PAR_O 259
+#define PAR_F 260
+#define PLUS 261
+#define DOT 262
+#define STAR 263
+#define EPSILON 264
+#define EMPTY_SET 265
+#define LETTER 266
+#define NEWLINE 267
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+#line 15 "regexp.y"
+{
+  char* str;
+}
+/* Line 1529 of yacc.c.  */
+#line 77 "regexp.tab.h"
+	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

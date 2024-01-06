@@ -2,6 +2,8 @@
 #include "regexp.tab.h"  // Inclure les définitions de tokens générées par Bison
 %}
 
+%option noyywrap
+
 int yylex(void);
 
 %%
@@ -14,10 +16,9 @@ int yylex(void);
 "E"           { printf("EPSILON\n"); return EPSILON; }
 "O"           { printf("EMPTY_SET\n"); return EMPTY_SET; }
 [a-z]         { printf("LETTER\n"); return LETTER; }
+\n            { return NEWLINE; } // Reconnaître les nouvelles lignes
+[a-zA-Z]+     { yylval.str = strdup(yytext); return WORD; }
+
 
 %%
-
-int yywrap() {
-    return 1;
-}
 

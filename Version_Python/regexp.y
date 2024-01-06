@@ -1,13 +1,23 @@
 %{
 #include <stdio.h>    // Nécessaire pour les fonctions d'impression
+#include <string.h>
+
 // Définir la fonction yyerror attendue par Bison
 void yyerror(const char *s) {
   fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 }
-int yylex(void);
+
+extern int yylex(void);
+char* regex; // Pour stocker l'expression régulière résultante.
+
 %}
 
-%token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET LETTER
+%union {
+  char* str;
+}
+
+%token <str> WORD
+%token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET LETTER NEWLINE WORD
 
 %right STAR       // * est plus prioritaire
 %left DOT         // . vient ensuite
@@ -17,22 +27,36 @@ int yylex(void);
 
 // La grammaire suit la structure et la priorité des opérateurs des expressions régulières
 
-reg_exp:
-    reg_exp PLUS reg_term   { printf("Opérateur PLUS (union) reconnu.\n"); }
-  | reg_term                { /* rien à faire ici */ }
+input:
+    expression NEWLINE words
+    ;
+
+expression:
+    expression PLUS term   { /* Construisez ici l'expression régulière */ }
+  | term                   { /* Construisez ici l'expression régulière */ }
   ;
 
-reg_term:
-    reg_term DOT reg_factor { printf("Opérateur DOT (concaténation) reconnu.\n"); }
-  | reg_factor              { /* rien à faire ici */ }
+term:
+    term DOT factor        { /* Construisez ici l'expression régulière */ }
+  | factor                 { /* Construisez ici l'expression régulière */ }
   ;
 
-reg_factor:
-    reg_factor STAR         { printf("Opérateur STAR (répétition) reconnu.\n"); }
-  | PAR_O reg_exp PAR_F     { printf("Parenthèses ouvrante et fermante reconnues.\n"); }
-  | LETTER                  { printf("Lettre reconnue.\n"); }
-  | EPSILON                 { printf("Epsilon reconnu.\n"); }
-  | EMPTY_SET               { printf("Ensemble vide reconnu.\n"); }
+factor:
+    factor STAR            { /* Construisez ici l'expression régulière */ }
+  | PAR_O expression PAR_F { /* Construisez ici l'expression régulière */ }
+  | LETTER                 { /* Construisez ici l'expression régulière */ }
+  | EPSILON                { /* Construisez ici l'expression régulière */ }
+  | EMPTY_SET              { /* Construisez ici l'expression régulière */ }
+  ;
+
+words:
+    words NEWLINE WORD { /* Testez ici le mot avec l'expression régulière */ }
+  | /* epsilon */
   ;
 
 %%
+
+int main(int argc, char **argv) {
+    yyparse();
+    return 0;
+}
