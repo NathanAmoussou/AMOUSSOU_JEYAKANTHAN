@@ -36,3 +36,27 @@ LETTER
 LETTER
 
 LETTER
+
+Question 4 :
+
+Faite dans 'regexp.y'.
+
+Question 5 :
+
+Faite dans 'regexp.y'.
+
+Question 6 :
+
+On tape flex regexp.l ce qui crée le fichier lex.yy.c.
+Ensuite on tape bison -d regexp.y ce qui génère regexp.tab.c et regexp.tab.h.
+Ensuite on tape gcc -o regexp_parser regexp.tab.c lex.yy.c -ly -ll ce qui retourne :
+"""
+regexp.tab.c:1244:16: error: implicit declaration of function 'yylex' is invalid in C99
+      [-Werror,-Wimplicit-function-declaration]
+      yychar = YYLEX;
+               ^
+regexp.tab.c:600:16: note: expanded from macro 'YYLEX'
+# define YYLEX yylex ()
+               ^
+1 error generated.
+"""

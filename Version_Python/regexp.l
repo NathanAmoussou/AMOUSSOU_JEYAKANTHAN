@@ -1,6 +1,8 @@
 %{
-#include "tokens.h"
+#include "regexp.tab.h"  // Inclure les définitions de tokens générées par Bison
 %}
+
+int yylex(void);
 
 %%
 
