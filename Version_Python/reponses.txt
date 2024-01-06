@@ -83,3 +83,8 @@ LETTER
 Opérateur DOT (concaténation) reconnu.
 Erreur de syntaxe : syntax error
 """
+
+Question 7 :
+
+On a fait plusieurs modifications dans 'regexp.y' et 'regexp.l'
+pour que le parser reconnaisse les expressions régulières et les mots.

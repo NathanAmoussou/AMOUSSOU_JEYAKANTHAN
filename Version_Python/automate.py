@@ -133,7 +133,7 @@ def acces_epsilon(a):
         res[i] est la liste des états accessible pour l'état i
     """
     
-    # A ecrire
+    # a ecrire
 
 
 def reconnait(a, mot):

@@ -17,7 +17,9 @@ char* regex; // Pour stocker l'expression régulière résultante.
 }
 
 %token <str> WORD
-%token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET LETTER NEWLINE WORD
+%token <str> LETTER  // Déclare que les tokens LETTER auront une valeur de type char*
+%type <str> expression term factor  // Déclare que ces symboles non terminaux auront une valeur de type char*
+%token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET LETTER NEWLINE
 
 %right STAR       // * est plus prioritaire
 %left DOT         // . vient ensuite
@@ -25,32 +27,41 @@ char* regex; // Pour stocker l'expression régulière résultante.
 
 %%
 
-// La grammaire suit la structure et la priorité des opérateurs des expressions régulières
-
 input:
-    expression NEWLINE words
+    expression NEWLINE words { printf("Expression régulière complète : %s\n", $1); }
     ;
 
 expression:
-    expression PLUS term   { /* Construisez ici l'expression régulière */ }
-  | term                   { /* Construisez ici l'expression régulière */ }
+    expression PLUS term   { 
+      $$ = strdup($1); strcat($$, "+"); strcat($$, $3); 
+      printf("Union reconnue : %s\n", $$); 
+      free($1); free($3);  // Assurez-vous de libérer la mémoire allouée précédemment
+    }
+  | term                   { $$ = strdup($1); }
+  ;
+
+
+expression:
+    expression PLUS term   { $$ = strdup($1); strcat($$, "+"); strcat($$, $3); printf("Union reconnue : %s\n", $$); }
+  | term                   { $$ = strdup($1); }
   ;
 
 term:
-    term DOT factor        { /* Construisez ici l'expression régulière */ }
-  | factor                 { /* Construisez ici l'expression régulière */ }
+    term DOT factor        { $$ = strdup($1); strcat($$, "."); strcat($$, $3); printf("Concaténation reconnue : %s\n", $$); }
+  | factor                 { $$ = strdup($1); }
   ;
 
 factor:
-    factor STAR            { /* Construisez ici l'expression régulière */ }
-  | PAR_O expression PAR_F { /* Construisez ici l'expression régulière */ }
-  | LETTER                 { /* Construisez ici l'expression régulière */ }
-  | EPSILON                { /* Construisez ici l'expression régulière */ }
-  | EMPTY_SET              { /* Construisez ici l'expression régulière */ }
+    factor STAR            { $$ = strdup($1); strcat($$, "*"); printf("Répétition reconnue : %s\n", $$); }
+  | PAR_O expression PAR_F { $$ = strdup("("); strcat($$, $2); strcat($$, ")"); printf("Groupement reconnu : %s\n", $$); }
+  | LETTER                 { $$ = $1; printf("Lettre reconnue : %s\n", $$); }
+  | EPSILON                { $$ = strdup("E"); printf("Epsilon reconnu\n"); }
+  | EMPTY_SET              { $$ = strdup("O"); printf("Ensemble vide reconnu\n"); }
   ;
 
 words:
-    words NEWLINE WORD { /* Testez ici le mot avec l'expression régulière */ }
+    words WORD { printf("Mot reconnu: %s\n", $2); /* Libérer la mémoire après utilisation */ free($2); }
+  | words NEWLINE
   | /* epsilon */
   ;
 

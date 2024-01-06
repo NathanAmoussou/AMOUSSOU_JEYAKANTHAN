@@ -4,21 +4,30 @@
 
 %option noyywrap
 
-int yylex(void);
+%x EXPRESSION
+%x WORDS
 
 %%
 
-"("           { printf("PAR_O\n"); return PAR_O; }
-")"           { printf("PAR_F\n"); return PAR_F; }
-"+"           { printf("PLUS\n"); return PLUS; }
-"."           { printf("DOT\n"); return DOT; }
-"*"           { printf("STAR\n"); return STAR; }
-"E"           { printf("EPSILON\n"); return EPSILON; }
-"O"           { printf("EMPTY_SET\n"); return EMPTY_SET; }
-[a-z]         { printf("LETTER\n"); return LETTER; }
-\n            { return NEWLINE; } // Reconnaître les nouvelles lignes
-[a-zA-Z]+     { yylval.str = strdup(yytext); return WORD; }
+<INITIAL>{
+    "("           { BEGIN(EXPRESSION); return PAR_O; }
+}
 
+<EXPRESSION>{
+    "("           { return PAR_O; }
+    ")"           { return PAR_F; }
+    "+"           { return PLUS; }
+    "."           { return DOT; }
+    "*"           { return STAR; }
+    "E"           { return EPSILON; }
+    "O"           { return EMPTY_SET; }
+    [a-z]         { yylval.str = strdup(yytext); return LETTER; }
+    "\n"          { BEGIN(WORDS); return NEWLINE; }
+}
+
+<WORDS>{
+    [a-zA-Z]+     { yylval.str = strdup(yytext); return WORD; }
+    "\n"          { return NEWLINE; }
+}
 
 %%
-

@@ -40,27 +40,27 @@
       know about them.  */
    enum yytokentype {
      WORD = 258,
-     PAR_O = 259,
-     PAR_F = 260,
-     PLUS = 261,
-     DOT = 262,
-     STAR = 263,
-     EPSILON = 264,
-     EMPTY_SET = 265,
-     LETTER = 266,
+     LETTER = 259,
+     PAR_O = 260,
+     PAR_F = 261,
+     PLUS = 262,
+     DOT = 263,
+     STAR = 264,
+     EPSILON = 265,
+     EMPTY_SET = 266,
      NEWLINE = 267
    };
 #endif
 /* Tokens.  */
 #define WORD 258
-#define PAR_O 259
-#define PAR_F 260
-#define PLUS 261
-#define DOT 262
-#define STAR 263
-#define EPSILON 264
-#define EMPTY_SET 265
-#define LETTER 266
+#define LETTER 259
+#define PAR_O 260
+#define PAR_F 261
+#define PLUS 262
+#define DOT 263
+#define STAR 264
+#define EPSILON 265
+#define EMPTY_SET 266
 #define NEWLINE 267
 
 

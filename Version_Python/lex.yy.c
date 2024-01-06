@@ -363,8 +363,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 11
-#define YY_END_OF_BUFFER 12
+#define YY_NUM_RULES 13
+#define YY_END_OF_BUFFER 14
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -372,10 +372,11 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[17] =
+static yyconst flex_int16_t yy_accept[23] =
     {   0,
-        0,    0,   12,   11,    9,    1,    2,    5,    3,    4,
-       10,    6,    7,    8,   10,    0
+        0,    0,    0,    0,    0,    0,   14,   13,    1,   10,
+        2,    3,    6,    4,    5,    7,    8,    9,   12,   11,
+       11,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -416,30 +417,34 @@ static yyconst flex_int32_t yy_meta[12] =
         2
     } ;
 
-static yyconst flex_int16_t yy_base[18] =
+static yyconst flex_int16_t yy_base[25] =
     {   0,
-        0,    0,   13,   14,   14,   14,   14,   14,   14,   14,
-        0,    0,    0,    0,    0,   14,   10
+       13,   12,    0,    0,   10,    0,   14,   24,   24,   24,
+       24,   24,   24,   24,   24,   24,   24,   24,   24,    0,
+        0,   24,   21,   11
     } ;
 
-static yyconst flex_int16_t yy_def[18] =
+static yyconst flex_int16_t yy_def[25] =
     {   0,
-       16,    1,   16,   16,   16,   16,   16,   16,   16,   16,
-       17,   17,   17,   17,   17,    0,   16
+       23,   23,   22,    3,   23,    5,   22,   22,   22,   22,
+       22,   22,   22,   22,   22,   22,   22,   22,   22,   24,
+       24,    0,   22,   22
     } ;
 
-static yyconst flex_int16_t yy_nxt[26] =
+static yyconst flex_int16_t yy_nxt[36] =
     {   0,
-        4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
-       14,   15,   16,    3,   16,   16,   16,   16,   16,   16,
-       16,   16,   16,   16,   16
+        8,   10,   11,   12,   13,   14,   15,    8,   16,   17,
+       18,   19,   21,   22,    9,    9,   22,   20,   20,   20,
+       20,    8,    8,    7,   22,   22,   22,   22,   22,   22,
+       22,   22,   22,   22,   22
     } ;
 
-static yyconst flex_int16_t yy_chk[26] =
+static yyconst flex_int16_t yy_chk[36] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,   17,    3,   16,   16,   16,   16,   16,   16,   16,
-       16,   16,   16,   16,   16
+        3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
+        3,    5,   24,    7,    2,    1,    0,    5,    5,    5,
+        5,   23,   23,   22,   22,   22,   22,   22,   22,   22,
+       22,   22,   22,   22,   22
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -459,9 +464,13 @@ char *yytext;
 #line 1 "regexp.l"
 #line 2 "regexp.l"
 #include "regexp.tab.h"  // Inclure les définitions de tokens générées par Bison
-#line 463 "lex.yy.c"
+
+
+#line 470 "lex.yy.c"
 
 #define INITIAL 0
+#define EXPRESSION 1
+#define WORDS 2
 
 #ifndef YY_NO_UNISTD_H
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
@@ -641,10 +650,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 9 "regexp.l"
+#line 10 "regexp.l"
 
 
-#line 648 "lex.yy.c"
+#line 657 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -697,13 +706,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 17 )
+				if ( yy_current_state >= 23 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 14 );
+		while ( yy_base[yy_current_state] != 24 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -729,62 +738,80 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "regexp.l"
-{ printf("PAR_O\n"); return PAR_O; }
+#line 13 "regexp.l"
+{ BEGIN(EXPRESSION); return PAR_O; }
 	YY_BREAK
+
+
 case 2:
 YY_RULE_SETUP
-#line 12 "regexp.l"
-{ printf("PAR_F\n"); return PAR_F; }
+#line 17 "regexp.l"
+{ return PAR_O; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "regexp.l"
-{ printf("PLUS\n"); return PLUS; }
+#line 18 "regexp.l"
+{ return PAR_F; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "regexp.l"
-{ printf("DOT\n"); return DOT; }
+#line 19 "regexp.l"
+{ return PLUS; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "regexp.l"
-{ printf("STAR\n"); return STAR; }
+#line 20 "regexp.l"
+{ return DOT; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "regexp.l"
-{ printf("EPSILON\n"); return EPSILON; }
+#line 21 "regexp.l"
+{ return STAR; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "regexp.l"
-{ printf("EMPTY_SET\n"); return EMPTY_SET; }
+#line 22 "regexp.l"
+{ return EPSILON; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "regexp.l"
-{ printf("LETTER\n"); return LETTER; }
+#line 23 "regexp.l"
+{ return EMPTY_SET; }
 	YY_BREAK
 case 9:
-/* rule 9 can match eol */
 YY_RULE_SETUP
-#line 19 "regexp.l"
-{ return NEWLINE; } // Reconnaître les nouvelles lignes
+#line 24 "regexp.l"
+{ yylval.str = strdup(yytext); return LETTER; }
 	YY_BREAK
 case 10:
+/* rule 10 can match eol */
 YY_RULE_SETUP
-#line 20 "regexp.l"
-{ yylval.str = strdup(yytext); return WORD; }
+#line 25 "regexp.l"
+{ BEGIN(WORDS); return NEWLINE; }
 	YY_BREAK
+
+
 case 11:
 YY_RULE_SETUP
-#line 23 "regexp.l"
+#line 29 "regexp.l"
+{ yylval.str = strdup(yytext); return WORD; }
+	YY_BREAK
+case 12:
+/* rule 12 can match eol */
+YY_RULE_SETUP
+#line 30 "regexp.l"
+{ return NEWLINE; }
+	YY_BREAK
+
+case 13:
+YY_RULE_SETUP
+#line 33 "regexp.l"
 ECHO;
 	YY_BREAK
-#line 787 "lex.yy.c"
+#line 812 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
+case YY_STATE_EOF(EXPRESSION):
+case YY_STATE_EOF(WORDS):
 	yyterminate();
 
 	case YY_END_OF_BUFFER:
@@ -1075,7 +1102,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 17 )
+			if ( yy_current_state >= 23 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1103,11 +1130,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 17 )
+		if ( yy_current_state >= 23 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 16);
+	yy_is_jam = (yy_current_state == 22);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1780,8 +1807,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 23 "regexp.l"
-
+#line 33 "regexp.l"
 
 
 
