@@ -1,0 +1,38 @@
+Question 1 : 
+
+Faite dans 'tokens.h'.
+
+Question 2 : 
+
+Faite dans 'regexp.l'.
+
+Question 3 :
+
+Dans le terminal, dans le fichier 'Version_Python' on tape 'flex regexp.l',
+ça crée le fichier 'lex.yy.c'.
+
+On tape 'gcc -o lexer lex.yy.c -ll' (sur MacOS '-ll' marche mais pas '-lfl',
+sur autres OS utiliser '-lfl'), ça crée le fichier 'lexer'.
+
+On tape ./lexer < test.1, ça retourne
+
+PAR_O
+LETTER
+PLUS
+LETTER
+PAR_F
+STAR
+DOT
+LETTER
+
+LETTER
+LETTER
+
+LETTER
+LETTER
+LETTER
+LETTER
+LETTER
+LETTER
+
+LETTER
