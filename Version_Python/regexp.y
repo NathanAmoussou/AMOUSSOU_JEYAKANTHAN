@@ -4,6 +4,7 @@
 void yyerror(const char *s) {
   fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 }
+int yylex(void);
 %}
 
 %token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET LETTER
