@@ -88,3 +88,9 @@ Question 7 :
 
 On a fait plusieurs modifications dans 'regexp.y' et 'regexp.l'
 pour que le parser reconnaisse les expressions régulières et les mots.
+
+Question 8 :
+
+On a fait plusieurs modifications dans 'regexp.y' et 'regexp.l'
+pour que le parser écrive dans main.py le code Python qui permet
+de gérérer le fichier qui exécuté, retourna un résultat satisfaisant.

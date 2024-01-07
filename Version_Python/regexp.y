@@ -13,6 +13,8 @@ char* regex; // Pour stocker l'expression régulière résultante.
 int automate_count = 0;
 FILE *fichier = NULL; // Déclaration de la variable fichier comme globale
 char* final_expression = NULL; // Pour stocker l'expression régulière finale
+char* recognized_words[100]; // Tableau pour stocker les mots reconnus, ajustez la taille selon vos besoins
+int word_count = 0; // Compteur pour les mots reconnus
 
 %}
 
@@ -99,7 +101,11 @@ factor:
   ;
 
 words:
-    words WORD { printf("Mot reconnu: %s\n", $2); /* Libérer la mémoire après utilisation */ free($2); }
+    words WORD {
+        printf("Mot reconnu: %s\n", $2); // Affiche le mot reconnu dans la console.
+        recognized_words[word_count++] = strdup($2); // Stocke le mot reconnu
+        free($2); // Libère la mémoire après utilisation.
+    }
   | words NEWLINE
   | /* epsilon */
   ;
@@ -116,6 +122,10 @@ int main(int argc, char **argv) {
     yyparse();
     if(final_expression) {
         fprintf(fichier, "\na_final = %s\nprint(a_final)\n", final_expression);
+    }
+    for(int i = 0; i < word_count; i++) {
+        fprintf(fichier, "print(reconnait(a_final,\"%s\"))\n", recognized_words[i]);
+        free(recognized_words[i]); // Libère la mémoire après utilisation
     }
     fclose(fichier);
     free(final_expression);

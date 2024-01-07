@@ -110,6 +110,8 @@ char* regex; // Pour stocker l'expression régulière résultante.
 int automate_count = 0;
 FILE *fichier = NULL; // Déclaration de la variable fichier comme globale
 char* final_expression = NULL; // Pour stocker l'expression régulière finale
+char* recognized_words[100]; // Tableau pour stocker les mots reconnus, ajustez la taille selon vos besoins
+int word_count = 0; // Compteur pour les mots reconnus
 
 
 
@@ -133,12 +135,12 @@ char* final_expression = NULL; // Pour stocker l'expression régulière finale
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 20 "regexp.y"
+#line 22 "regexp.y"
 {
   char* str;
 }
 /* Line 193 of yacc.c.  */
-#line 142 "regexp.tab.c"
+#line 144 "regexp.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -151,7 +153,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 155 "regexp.tab.c"
+#line 157 "regexp.tab.c"
 
 #ifdef short
 # undef short
@@ -437,8 +439,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    36,    36,    43,    50,    54,    61,    65,    72,    77,
-      85,    92,   102,   103,   104
+       0,    38,    38,    45,    52,    56,    63,    67,    74,    79,
+      87,    94,   104,   109,   110
 };
 #endif
 
@@ -1347,7 +1349,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 36 "regexp.y"
+#line 38 "regexp.y"
     { 
       final_expression = strdup((yyvsp[(1) - (3)].str)); // Capture l'expression régulière finale
       printf("Expression régulière complète : %s\n", (yyvsp[(1) - (3)].str)); 
@@ -1355,7 +1357,7 @@ yyreduce:
     break;
 
   case 3:
-#line 43 "regexp.y"
+#line 45 "regexp.y"
     { 
     char var[20], buffer[200];
     sprintf(var, "a%d", automate_count++);
@@ -1366,12 +1368,12 @@ yyreduce:
     break;
 
   case 4:
-#line 50 "regexp.y"
+#line 52 "regexp.y"
     { (yyval.str) = strdup((yyvsp[(1) - (1)].str)); ;}
     break;
 
   case 5:
-#line 54 "regexp.y"
+#line 56 "regexp.y"
     { 
                             char var[20], buffer[200];
                             sprintf(var, "a%d", automate_count++);
@@ -1382,12 +1384,12 @@ yyreduce:
     break;
 
   case 6:
-#line 61 "regexp.y"
+#line 63 "regexp.y"
     { (yyval.str) = strdup((yyvsp[(1) - (1)].str)); ;}
     break;
 
   case 7:
-#line 65 "regexp.y"
+#line 67 "regexp.y"
     { 
                             char var[20], buffer[200];
                             sprintf(var, "a%d", automate_count++);
@@ -1398,7 +1400,7 @@ yyreduce:
     break;
 
   case 8:
-#line 72 "regexp.y"
+#line 74 "regexp.y"
     { 
                             // Ici, vous pouvez choisir de simplement transmettre l'automate de l'expression
                             // ou de créer un nouvel automate pour le groupement.
@@ -1407,7 +1409,7 @@ yyreduce:
     break;
 
   case 9:
-#line 77 "regexp.y"
+#line 79 "regexp.y"
     { 
                             char var[20];
                             sprintf(var, "a%d", automate_count++); // Crée un nom de variable unique.
@@ -1419,7 +1421,7 @@ yyreduce:
     break;
 
   case 10:
-#line 85 "regexp.y"
+#line 87 "regexp.y"
     { 
                             char var[20], buffer[100];
                             sprintf(var, "a%d", automate_count++);
@@ -1430,7 +1432,7 @@ yyreduce:
     break;
 
   case 11:
-#line 92 "regexp.y"
+#line 94 "regexp.y"
     { 
                             char var[20], buffer[100];
                             sprintf(var, "a%d", automate_count++);
@@ -1441,13 +1443,17 @@ yyreduce:
     break;
 
   case 12:
-#line 102 "regexp.y"
-    { printf("Mot reconnu: %s\n", (yyvsp[(2) - (2)].str)); /* Libérer la mémoire après utilisation */ free((yyvsp[(2) - (2)].str)); ;}
+#line 104 "regexp.y"
+    {
+        printf("Mot reconnu: %s\n", (yyvsp[(2) - (2)].str)); // Affiche le mot reconnu dans la console.
+        recognized_words[word_count++] = strdup((yyvsp[(2) - (2)].str)); // Stocke le mot reconnu
+        free((yyvsp[(2) - (2)].str)); // Libère la mémoire après utilisation.
+    ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1451 "regexp.tab.c"
+#line 1457 "regexp.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1661,7 +1667,7 @@ yyreturn:
 }
 
 
-#line 107 "regexp.y"
+#line 113 "regexp.y"
 
 
 int main(int argc, char **argv) {
@@ -1675,7 +1681,12 @@ int main(int argc, char **argv) {
     if(final_expression) {
         fprintf(fichier, "\na_final = %s\nprint(a_final)\n", final_expression);
     }
+    for(int i = 0; i < word_count; i++) {
+        fprintf(fichier, "print(reconnait(a_final,\"%s\"))\n", recognized_words[i]);
+        free(recognized_words[i]); // Libère la mémoire après utilisation
+    }
     fclose(fichier);
     free(final_expression);
     return 0;
 }
+

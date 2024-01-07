@@ -133,14 +133,44 @@ def acces_epsilon(a):
         res[i] est la liste des états accessible pour l'état i
     """
     
-    # a ecrire
+    def dfs(current, visited):
+        if current not in visited:
+            visited.add(current)
+            if (current, "E") in a.transition:
+                for state in a.transition[(current, "E")]:
+                    dfs(state, visited)
+        return visited
+
+    res = []
+    for i in range(a.n):
+        accessible = dfs(i, set())
+        res.append(list(accessible))
+    return res
 
 
 def reconnait(a, mot):
     """ Renvoie vrai si le mot mot est reconnu par l'automate a
     """
     
-    # a ecrire
+    # Obtenez les états accessibles par epsilon pour chaque état
+    epsilon_access = acces_epsilon(a)
+
+    # Ensemble des états actuels, en commençant par l'état 0 et ses états epsilon-accessibles
+    current_states = set(epsilon_access[0])
+
+    # Parcourir chaque caractère du mot
+    for char in mot:
+        next_states = set()
+        for state in current_states:
+            if (state, char) in a.transition:
+                # Ajouter les états accessibles par le caractère courant
+                for next_state in a.transition[(state, char)]:
+                    # Ajouter les états accessibles par epsilon à partir des nouveaux états
+                    next_states.update(epsilon_access[next_state])
+        current_states = next_states
+
+    # Vérifier si l'un des états finaux est atteint
+    return any(state in a.final for state in current_states)
 
 
 
