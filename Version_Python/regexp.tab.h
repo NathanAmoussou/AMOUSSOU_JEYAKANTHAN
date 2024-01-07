@@ -68,7 +68,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 15 "regexp.y"
+#line 17 "regexp.y"
 {
   char* str;
 }

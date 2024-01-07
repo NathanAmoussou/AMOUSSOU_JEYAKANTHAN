@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>    // Nécessaire pour les fonctions d'impression
 #include <string.h>
+#include <stdlib.h>   // Pour la fonction exit
 
 // Définir la fonction yyerror attendue par Bison
 void yyerror(const char *s) {
@@ -9,6 +10,7 @@ void yyerror(const char *s) {
 
 extern int yylex(void);
 char* regex; // Pour stocker l'expression régulière résultante.
+FILE *py_file;  // Fichier pour écrire le code Python
 
 %}
 
@@ -19,7 +21,7 @@ char* regex; // Pour stocker l'expression régulière résultante.
 %token <str> WORD
 %token <str> LETTER  // Déclare que les tokens LETTER auront une valeur de type char*
 %type <str> expression term factor  // Déclare que ces symboles non terminaux auront une valeur de type char*
-%token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET LETTER NEWLINE
+%token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET NEWLINE
 
 %right STAR       // * est plus prioritaire
 %left DOT         // . vient ensuite
@@ -32,13 +34,27 @@ input:
     ;
 
 expression:
-    expression PLUS term   { 
-      $$ = strdup($1); strcat($$, "+"); strcat($$, $3); 
-      printf("Union reconnue : %s\n", $$); 
-      free($1); free($3);  // Assurez-vous de libérer la mémoire allouée précédemment
+    expression NEWLINE words {
+        py_file = fopen("main.py", "w");  // Ouvre le fichier pour écrire
+        if (py_file == NULL) {
+            fprintf(stderr, "Erreur d'ouverture du fichier main.py\n");
+            exit(1);
+        }
+
+        // Écrire le code Python pour créer l'automate
+        fprintf(py_file, "from automate import *\n\n");
+        fprintf(py_file, "a_final = %s\n", $1);  // $1 est l'expression régulière construite
+        fprintf(py_file, "print(a_final);\n\n");
+
+        // Écrire le code pour tester les mots
+        // Vous devrez ajouter la logique pour passer les mots du fichier d'entrée ici
+        fprintf(py_file, "print(reconnait(a_final,\"ab\"))\n");
+        fprintf(py_file, "print(reconnait(a_final,\"aaaaac\"))\n");
+        fprintf(py_file, "print(reconnait(a_final,\"c\"))\n");
+
+        fclose(py_file);  // Fermer le fichier
     }
-  | term                   { $$ = strdup($1); }
-  ;
+    ;
 
 
 expression:
