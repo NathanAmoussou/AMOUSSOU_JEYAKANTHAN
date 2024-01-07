@@ -107,7 +107,9 @@ void yyerror(const char *s) {
 
 extern int yylex(void);
 char* regex; // Pour stocker l'expression régulière résultante.
-FILE *py_file;  // Fichier pour écrire le code Python
+int automate_count = 0;
+FILE *fichier = NULL; // Déclaration de la variable fichier comme globale
+char* final_expression = NULL; // Pour stocker l'expression régulière finale
 
 
 
@@ -131,12 +133,12 @@ FILE *py_file;  // Fichier pour écrire le code Python
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 17 "regexp.y"
+#line 20 "regexp.y"
 {
   char* str;
 }
 /* Line 193 of yacc.c.  */
-#line 140 "regexp.tab.c"
+#line 142 "regexp.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -149,7 +151,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 153 "regexp.tab.c"
+#line 155 "regexp.tab.c"
 
 #ifdef short
 # undef short
@@ -364,16 +366,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   20
+#define YYLAST   15
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  13
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  15
+#define YYNRULES  14
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  23
+#define YYNSTATES  21
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -419,25 +421,24 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     7,    11,    15,    17,    21,    23,    26,
-      30,    32,    34,    36,    39,    42
+       0,     0,     3,     7,    11,    13,    17,    19,    22,    26,
+      28,    30,    32,    35,    38
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      14,     0,    -1,    15,    12,    18,    -1,    15,    12,    18,
-      -1,    15,     7,    16,    -1,    16,    -1,    16,     8,    17,
-      -1,    17,    -1,    17,     9,    -1,     5,    15,     6,    -1,
-       4,    -1,    10,    -1,    11,    -1,    18,     3,    -1,    18,
-      12,    -1,    -1
+      14,     0,    -1,    15,    12,    18,    -1,    15,     7,    16,
+      -1,    16,    -1,    16,     8,    17,    -1,    17,    -1,    17,
+       9,    -1,     5,    15,     6,    -1,     4,    -1,    10,    -1,
+      11,    -1,    18,     3,    -1,    18,    12,    -1,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    33,    33,    37,    61,    62,    66,    67,    71,    72,
-      73,    74,    75,    79,    80,    81
+       0,    36,    36,    43,    50,    54,    61,    65,    72,    77,
+      85,    92,   102,   103,   104
 };
 #endif
 
@@ -465,15 +466,15 @@ static const yytype_uint16 yytoknum[] =
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    13,    14,    15,    15,    15,    16,    16,    17,    17,
-      17,    17,    17,    18,    18,    18
+       0,    13,    14,    15,    15,    16,    16,    17,    17,    17,
+      17,    17,    18,    18,    18
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     3,     3,     3,     1,     3,     1,     2,     3,
-       1,     1,     1,     2,     2,     0
+       0,     2,     3,     3,     1,     3,     1,     2,     3,     1,
+       1,     1,     2,     2,     0
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -481,50 +482,48 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,    10,     0,    11,    12,     0,     0,     5,     7,     0,
-       1,     0,    15,     0,     8,     9,    15,     4,     2,     6,
-       3,    13,    14
+       0,     9,     0,    10,    11,     0,     0,     4,     6,     0,
+       1,     0,    14,     0,     7,     8,     3,     2,     5,    12,
+      13
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     5,     6,     7,     8,    18
+      -1,     5,     6,     7,     8,    17
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -5
+#define YYPACT_NINF -7
 static const yytype_int8 yypact[] =
 {
-       1,    -5,     1,    -5,    -5,     7,     6,     8,     5,    -4,
-      -5,     1,    -5,     1,    -5,    -5,    -5,     8,    -3,     5,
-      -2,    -5,    -5
+       0,    -7,     0,    -7,    -7,     7,    -6,     4,    -1,    -4,
+      -7,     0,    -7,     0,    -7,    -7,     4,    -3,    -1,    -7,
+      -7
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -5,    -5,    13,     9,     4,     3
+      -7,    -7,    11,     3,     2,    -7
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
    positive, shift that token.  If negative, reduce the rule which
    number is the opposite.  If zero, do what YYDEFACT says.
    If YYTABLE_NINF, syntax error.  */
-#define YYTABLE_NINF -4
-static const yytype_int8 yytable[] =
+#define YYTABLE_NINF -1
+static const yytype_uint8 yytable[] =
 {
-      21,    21,    15,    11,    -3,     1,     2,    10,    16,    22,
-      22,     3,     4,    11,    14,     9,    13,    19,    12,    20,
-      17
+      19,    11,    15,    11,     1,     2,    12,    10,    14,    20,
+       3,     4,    13,     9,    16,    18
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       3,     3,     6,     7,     7,     4,     5,     0,    12,    12,
-      12,    10,    11,     7,     9,     2,     8,    13,    12,    16,
-      11
+       3,     7,     6,     7,     4,     5,    12,     0,     9,    12,
+      10,    11,     8,     2,    11,    13
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -532,8 +531,8 @@ static const yytype_uint8 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,     4,     5,    10,    11,    14,    15,    16,    17,    15,
-       0,     7,    12,     8,     9,     6,    12,    16,    18,    17,
-      18,     3,    12
+       0,     7,    12,     8,     9,     6,    16,    18,    17,     3,
+      12
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1348,87 +1347,107 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 33 "regexp.y"
-    { printf("Expression régulière complète : %s\n", (yyvsp[(1) - (3)].str)); ;}
+#line 36 "regexp.y"
+    { 
+      final_expression = strdup((yyvsp[(1) - (3)].str)); // Capture l'expression régulière finale
+      printf("Expression régulière complète : %s\n", (yyvsp[(1) - (3)].str)); 
+      ;}
     break;
 
   case 3:
-#line 37 "regexp.y"
-    {
-        py_file = fopen("main.py", "w");  // Ouvre le fichier pour écrire
-        if (py_file == NULL) {
-            fprintf(stderr, "Erreur d'ouverture du fichier main.py\n");
-            exit(1);
-        }
-
-        // Écrire le code Python pour créer l'automate
-        fprintf(py_file, "from automate import *\n\n");
-        fprintf(py_file, "a_final = %s\n", (yyvsp[(1) - (3)].str));  // $1 est l'expression régulière construite
-        fprintf(py_file, "print(a_final);\n\n");
-
-        // Écrire le code pour tester les mots
-        // Vous devrez ajouter la logique pour passer les mots du fichier d'entrée ici
-        fprintf(py_file, "print(reconnait(a_final,\"ab\"))\n");
-        fprintf(py_file, "print(reconnait(a_final,\"aaaaac\"))\n");
-        fprintf(py_file, "print(reconnait(a_final,\"c\"))\n");
-
-        fclose(py_file);  // Fermer le fichier
-    ;}
+#line 43 "regexp.y"
+    { 
+    char var[20], buffer[200];
+    sprintf(var, "a%d", automate_count++);
+    sprintf(buffer, "%s = union(%s, %s)\n", var, (yyvsp[(1) - (3)].str), (yyvsp[(3) - (3)].str));
+    fputs(buffer, fichier);
+    (yyval.str) = strdup(var);
+    printf("Union reconnue : %s\n", (yyval.str)); ;}
     break;
 
   case 4:
-#line 61 "regexp.y"
-    { (yyval.str) = strdup((yyvsp[(1) - (3)].str)); strcat((yyval.str), "+"); strcat((yyval.str), (yyvsp[(3) - (3)].str)); printf("Union reconnue : %s\n", (yyval.str)); ;}
+#line 50 "regexp.y"
+    { (yyval.str) = strdup((yyvsp[(1) - (1)].str)); ;}
     break;
 
   case 5:
-#line 62 "regexp.y"
-    { (yyval.str) = strdup((yyvsp[(1) - (1)].str)); ;}
+#line 54 "regexp.y"
+    { 
+                            char var[20], buffer[200];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = concatenation(%s, %s)\n", var, (yyvsp[(1) - (3)].str), (yyvsp[(3) - (3)].str));
+                            fputs(buffer, fichier);
+                            (yyval.str) = strdup(var);
+                            printf("Concaténation reconnue : %s\n", (yyval.str)); ;}
     break;
 
   case 6:
-#line 66 "regexp.y"
-    { (yyval.str) = strdup((yyvsp[(1) - (3)].str)); strcat((yyval.str), "."); strcat((yyval.str), (yyvsp[(3) - (3)].str)); printf("Concaténation reconnue : %s\n", (yyval.str)); ;}
-    break;
-
-  case 7:
-#line 67 "regexp.y"
+#line 61 "regexp.y"
     { (yyval.str) = strdup((yyvsp[(1) - (1)].str)); ;}
     break;
 
+  case 7:
+#line 65 "regexp.y"
+    { 
+                            char var[20], buffer[200];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = etoile(%s)\n", var, (yyvsp[(1) - (2)].str));
+                            fputs(buffer, fichier);
+                            (yyval.str) = strdup(var);
+                            printf("Répétition reconnue : %s\n", (yyval.str)); ;}
+    break;
+
   case 8:
-#line 71 "regexp.y"
-    { (yyval.str) = strdup((yyvsp[(1) - (2)].str)); strcat((yyval.str), "*"); printf("Répétition reconnue : %s\n", (yyval.str)); ;}
+#line 72 "regexp.y"
+    { 
+                            // Ici, vous pouvez choisir de simplement transmettre l'automate de l'expression
+                            // ou de créer un nouvel automate pour le groupement.
+                            (yyval.str) = strdup((yyvsp[(2) - (3)].str));
+                            printf("Groupement reconnu : %s\n", (yyval.str)); ;}
     break;
 
   case 9:
-#line 72 "regexp.y"
-    { (yyval.str) = strdup("("); strcat((yyval.str), (yyvsp[(2) - (3)].str)); strcat((yyval.str), ")"); printf("Groupement reconnu : %s\n", (yyval.str)); ;}
+#line 77 "regexp.y"
+    { 
+                            char var[20];
+                            sprintf(var, "a%d", automate_count++); // Crée un nom de variable unique.
+                            char buffer[100]; // Assurez-vous que le buffer est suffisamment grand pour le contenu que vous voulez écrire.
+                            sprintf(buffer, "%s = automate(\"%s\")\n", var, (yyvsp[(1) - (1)].str)); // Formatte la chaîne dans buffer.
+                            fputs(buffer, fichier); ; // Écrit le code dans main.py.
+                            (yyval.str) = strdup(var); // Stocke le nom de la variable pour une utilisation ultérieure.
+                            printf("Lettre reconnue : %s\n", (yyval.str)); ;}
     break;
 
   case 10:
-#line 73 "regexp.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); printf("Lettre reconnue : %s\n", (yyval.str)); ;}
+#line 85 "regexp.y"
+    { 
+                            char var[20], buffer[100];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = automate_epsilon()\n", var); // Adaptez en fonction de votre implémentation
+                            fputs(buffer, fichier);
+                            (yyval.str) = strdup(var);
+                            printf("Epsilon reconnu\n"); ;}
     break;
 
   case 11:
-#line 74 "regexp.y"
-    { (yyval.str) = strdup("E"); printf("Epsilon reconnu\n"); ;}
+#line 92 "regexp.y"
+    { 
+                            char var[20], buffer[100];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = automate_empty_set()\n", var); // Adaptez en fonction de votre implémentation
+                            fputs(buffer, fichier);
+                            (yyval.str) = strdup(var);
+                            printf("Ensemble vide reconnu\n"); ;}
     break;
 
   case 12:
-#line 75 "regexp.y"
-    { (yyval.str) = strdup("O"); printf("Ensemble vide reconnu\n"); ;}
-    break;
-
-  case 13:
-#line 79 "regexp.y"
+#line 102 "regexp.y"
     { printf("Mot reconnu: %s\n", (yyvsp[(2) - (2)].str)); /* Libérer la mémoire après utilisation */ free((yyvsp[(2) - (2)].str)); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1432 "regexp.tab.c"
+#line 1451 "regexp.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1642,10 +1661,21 @@ yyreturn:
 }
 
 
-#line 84 "regexp.y"
+#line 107 "regexp.y"
 
 
 int main(int argc, char **argv) {
+    fichier = fopen("main.py", "w"); // Ouvre le fichier une seule fois
+    if (!fichier) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier\n");
+        exit(1);
+    }
+    fputs("from automate import *\n\n", fichier);
     yyparse();
+    if(final_expression) {
+        fprintf(fichier, "\na_final = %s\nprint(a_final)\n", final_expression);
+    }
+    fclose(fichier);
+    free(final_expression);
     return 0;
 }

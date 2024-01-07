@@ -10,9 +10,12 @@ void yyerror(const char *s) {
 
 extern int yylex(void);
 char* regex; // Pour stocker l'expression régulière résultante.
-FILE *py_file;  // Fichier pour écrire le code Python
+int automate_count = 0;
+FILE *fichier = NULL; // Déclaration de la variable fichier comme globale
+char* final_expression = NULL; // Pour stocker l'expression régulière finale
 
 %}
+
 
 %union {
   char* str;
@@ -30,49 +33,69 @@ FILE *py_file;  // Fichier pour écrire le code Python
 %%
 
 input:
-    expression NEWLINE words { printf("Expression régulière complète : %s\n", $1); }
+    expression NEWLINE words { 
+      final_expression = strdup($1); // Capture l'expression régulière finale
+      printf("Expression régulière complète : %s\n", $1); 
+      }
     ;
 
 expression:
-    expression NEWLINE words {
-        py_file = fopen("main.py", "w");  // Ouvre le fichier pour écrire
-        if (py_file == NULL) {
-            fprintf(stderr, "Erreur d'ouverture du fichier main.py\n");
-            exit(1);
-        }
-
-        // Écrire le code Python pour créer l'automate
-        fprintf(py_file, "from automate import *\n\n");
-        fprintf(py_file, "a_final = %s\n", $1);  // $1 est l'expression régulière construite
-        fprintf(py_file, "print(a_final);\n\n");
-
-        // Écrire le code pour tester les mots
-        // Vous devrez ajouter la logique pour passer les mots du fichier d'entrée ici
-        fprintf(py_file, "print(reconnait(a_final,\"ab\"))\n");
-        fprintf(py_file, "print(reconnait(a_final,\"aaaaac\"))\n");
-        fprintf(py_file, "print(reconnait(a_final,\"c\"))\n");
-
-        fclose(py_file);  // Fermer le fichier
-    }
-    ;
-
-
-expression:
-    expression PLUS term   { $$ = strdup($1); strcat($$, "+"); strcat($$, $3); printf("Union reconnue : %s\n", $$); }
+    expression PLUS term   { 
+    char var[20], buffer[200];
+    sprintf(var, "a%d", automate_count++);
+    sprintf(buffer, "%s = union(%s, %s)\n", var, $1, $3);
+    fputs(buffer, fichier);
+    $$ = strdup(var);
+    printf("Union reconnue : %s\n", $$); }
   | term                   { $$ = strdup($1); }
   ;
 
 term:
-    term DOT factor        { $$ = strdup($1); strcat($$, "."); strcat($$, $3); printf("Concaténation reconnue : %s\n", $$); }
+    term DOT factor        { 
+                            char var[20], buffer[200];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = concatenation(%s, %s)\n", var, $1, $3);
+                            fputs(buffer, fichier);
+                            $$ = strdup(var);
+                            printf("Concaténation reconnue : %s\n", $$); }
   | factor                 { $$ = strdup($1); }
   ;
 
 factor:
-    factor STAR            { $$ = strdup($1); strcat($$, "*"); printf("Répétition reconnue : %s\n", $$); }
-  | PAR_O expression PAR_F { $$ = strdup("("); strcat($$, $2); strcat($$, ")"); printf("Groupement reconnu : %s\n", $$); }
-  | LETTER                 { $$ = $1; printf("Lettre reconnue : %s\n", $$); }
-  | EPSILON                { $$ = strdup("E"); printf("Epsilon reconnu\n"); }
-  | EMPTY_SET              { $$ = strdup("O"); printf("Ensemble vide reconnu\n"); }
+    factor STAR            { 
+                            char var[20], buffer[200];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = etoile(%s)\n", var, $1);
+                            fputs(buffer, fichier);
+                            $$ = strdup(var);
+                            printf("Répétition reconnue : %s\n", $$); }
+  | PAR_O expression PAR_F { 
+                            // Ici, vous pouvez choisir de simplement transmettre l'automate de l'expression
+                            // ou de créer un nouvel automate pour le groupement.
+                            $$ = strdup($2);
+                            printf("Groupement reconnu : %s\n", $$); }
+  | LETTER                 { 
+                            char var[20];
+                            sprintf(var, "a%d", automate_count++); // Crée un nom de variable unique.
+                            char buffer[100]; // Assurez-vous que le buffer est suffisamment grand pour le contenu que vous voulez écrire.
+                            sprintf(buffer, "%s = automate(\"%s\")\n", var, $1); // Formatte la chaîne dans buffer.
+                            fputs(buffer, fichier); ; // Écrit le code dans main.py.
+                            $$ = strdup(var); // Stocke le nom de la variable pour une utilisation ultérieure.
+                            printf("Lettre reconnue : %s\n", $$); }
+  | EPSILON                { 
+                            char var[20], buffer[100];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = automate_epsilon()\n", var); // Adaptez en fonction de votre implémentation
+                            fputs(buffer, fichier);
+                            $$ = strdup(var);
+                            printf("Epsilon reconnu\n"); }
+  | EMPTY_SET              { 
+                            char var[20], buffer[100];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = automate_empty_set()\n", var); // Adaptez en fonction de votre implémentation
+                            fputs(buffer, fichier);
+                            $$ = strdup(var);
+                            printf("Ensemble vide reconnu\n"); }
   ;
 
 words:
@@ -84,6 +107,17 @@ words:
 %%
 
 int main(int argc, char **argv) {
+    fichier = fopen("main.py", "w"); // Ouvre le fichier une seule fois
+    if (!fichier) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier\n");
+        exit(1);
+    }
+    fputs("from automate import *\n\n", fichier);
     yyparse();
+    if(final_expression) {
+        fprintf(fichier, "\na_final = %s\nprint(a_final)\n", final_expression);
+    }
+    fclose(fichier);
+    free(final_expression);
     return 0;
 }
