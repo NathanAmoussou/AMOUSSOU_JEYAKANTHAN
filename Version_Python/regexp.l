@@ -1,8 +1,8 @@
 %{
-#include "regexp.tab.h"  // Inclure les définitions de tokens générées par Bison
+#include "regexp.tab.h"  // Inclut les définitions de tokens générées par Bison
 %}
 
-%option noyywrap
+%option noyywrap // Indique à Flex de ne pas générer de code pour la fonction yywrap()
 
 %x EXPRESSION
 %x WORDS

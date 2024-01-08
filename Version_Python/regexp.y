@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>   // Pour la fonction exit
 
-// Définir la fonction yyerror attendue par Bison
+// Définit la fonction yyerror attendue par Bison
 void yyerror(const char *s) {
   fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 }
@@ -13,7 +13,7 @@ char* regex; // Pour stocker l'expression régulière résultante.
 int automate_count = 0;
 FILE *fichier = NULL; // Déclaration de la variable fichier comme globale
 char* final_expression = NULL; // Pour stocker l'expression régulière finale
-char* recognized_words[100]; // Tableau pour stocker les mots reconnus, ajustez la taille selon vos besoins
+char* recognized_words[100]; // Tableau pour stocker les mots reconnus, ajuster la taille selon les besoins
 int word_count = 0; // Compteur pour les mots reconnus
 
 %}
@@ -72,14 +72,12 @@ factor:
                             $$ = strdup(var);
                             printf("Répétition reconnue : %s\n", $$); }
   | PAR_O expression PAR_F { 
-                            // Ici, vous pouvez choisir de simplement transmettre l'automate de l'expression
-                            // ou de créer un nouvel automate pour le groupement.
                             $$ = strdup($2);
                             printf("Groupement reconnu : %s\n", $$); }
   | LETTER                 { 
                             char var[20];
                             sprintf(var, "a%d", automate_count++); // Crée un nom de variable unique.
-                            char buffer[100]; // Assurez-vous que le buffer est suffisamment grand pour le contenu que vous voulez écrire.
+                            char buffer[100]; // S'assurer que le buffer est suffisamment grand pour le contenu à écrire.
                             sprintf(buffer, "%s = automate(\"%s\")\n", var, $1); // Formatte la chaîne dans buffer.
                             fputs(buffer, fichier); ; // Écrit le code dans main.py.
                             $$ = strdup(var); // Stocke le nom de la variable pour une utilisation ultérieure.
@@ -87,14 +85,14 @@ factor:
   | EPSILON                { 
                             char var[20], buffer[100];
                             sprintf(var, "a%d", automate_count++);
-                            sprintf(buffer, "%s = automate_epsilon()\n", var); // Adaptez en fonction de votre implémentation
+                            sprintf(buffer, "%s = automate_epsilon()\n", var);
                             fputs(buffer, fichier);
                             $$ = strdup(var);
                             printf("Epsilon reconnu\n"); }
   | EMPTY_SET              { 
                             char var[20], buffer[100];
                             sprintf(var, "a%d", automate_count++);
-                            sprintf(buffer, "%s = automate_empty_set()\n", var); // Adaptez en fonction de votre implémentation
+                            sprintf(buffer, "%s = automate_empty_set()\n", var);
                             fputs(buffer, fichier);
                             $$ = strdup(var);
                             printf("Ensemble vide reconnu\n"); }
