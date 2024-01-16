@@ -133,18 +133,29 @@ def acces_epsilon(a):
         res[i] est la liste des états accessible pour l'état i
     """
     
+    # Définition d'une fonction de recherche en profondeur (DFS)
     def dfs(current, visited):
+        # Si l'état courant n'a pas encore été visité
         if current not in visited:
+            # Marquer l'état courant comme visité
             visited.add(current)
+            # S'il existe une transition epsilon à partir de l'état courant
             if (current, "E") in a.transition:
+                # Pour chaque état atteignable à partir de l'état courant par une transition epsilon
                 for state in a.transition[(current, "E")]:
+                    # Effectuer récursivement une recherche en profondeur à partir du nouvel état
                     dfs(state, visited)
+        # Retourner l'ensemble des états visités
         return visited
 
+    # Pour chaque état de l'automate
     res = []
     for i in range(a.n):
+        # Effectuer une recherche en profondeur à partir de l'état courant
         accessible = dfs(i, set())
+        # Ajouter la liste des états accessibles à la liste de résultats
         res.append(list(accessible))
+    # Retourner la liste des états accessibles par epsilon pour chaque état
     return res
 
 

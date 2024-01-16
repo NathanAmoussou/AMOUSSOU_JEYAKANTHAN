@@ -1,16 +1,18 @@
 %{
 #include <stdio.h>    // Nécessaire pour les fonctions d'impression
-#include <string.h>
+#include <string.h>   // Nécessaire pour la fonction strdup
 #include <stdlib.h>   // Pour la fonction exit
 
 // Définit la fonction yyerror attendue par Bison
+// (pour palier au problème de compilation)
 void yyerror(const char *s) {
   fprintf(stderr, "Erreur de syntaxe : %s\n", s);
 }
 
-extern int yylex(void);
+extern int yylex(void); // Déclare la fonction yylex() générée par Flex
+// (pour palier au problème de compilation)
 char* regex; // Pour stocker l'expression régulière résultante.
-int automate_count = 0;
+int automate_count = 0; // Pour compter le nombre d'automates créés.
 FILE *fichier = NULL; // Déclaration de la variable fichier comme globale
 char* final_expression = NULL; // Pour stocker l'expression régulière finale
 char* recognized_words[100]; // Tableau pour stocker les mots reconnus, ajuster la taille selon les besoins
@@ -18,12 +20,15 @@ int word_count = 0; // Compteur pour les mots reconnus
 
 %}
 
-
+// Utilisée pour définir un type d'union que Yacc/Bison 
+// utilisera pour stocker les valeurs sémantiques.
 %union {
   char* str;
+  // Les valeurs sémantiques de vos symboles de grammaire peuvent 
+  // être des chaînes de caractères.
 }
 
-%token <str> WORD
+%token <str> WORD // Déclare que les tokens WORD auront une valeur de type char*
 %token <str> LETTER  // Déclare que les tokens LETTER auront une valeur de type char*
 %type <str> expression term factor  // Déclare que ces symboles non terminaux auront une valeur de type char*
 %token PAR_O PAR_F PLUS DOT STAR EPSILON EMPTY_SET NEWLINE
@@ -43,12 +48,12 @@ input:
 
 expression:
     expression PLUS term   { 
-    char var[20], buffer[200];
-    sprintf(var, "a%d", automate_count++);
-    sprintf(buffer, "%s = union(%s, %s)\n", var, $1, $3);
-    fputs(buffer, fichier);
-    $$ = strdup(var);
-    printf("Union reconnue : %s\n", $$); }
+                            char var[20], buffer[200];
+                            sprintf(var, "a%d", automate_count++);
+                            sprintf(buffer, "%s = union(%s, %s)\n", var, $1, $3);
+                            fputs(buffer, fichier);
+                            $$ = strdup(var);
+                            printf("Union reconnue : %s\n", $$); }
   | term                   { $$ = strdup($1); }
   ;
 
